@@ -2,7 +2,8 @@
 //  main.c
 //  SudokuGenerator
 //
-//  Malte Pagel
+//  Created by Malte Pagel on 22.11.14.
+//  Copyright (c) 2014 Malte Pagel. All rights reserved.
 //
 
 #include <stdio.h>
@@ -299,7 +300,7 @@ int main (int argc, const char * argv[]) {
 	for ( i = 0; i < LINE; i++ ) {
 		for ( j = 0; j < LINE; j++ ) {
 			random = rand() % LINE;
-			if ( i == random )
+			if ( j == random )
 				continue;
 			tmp = multi_raw[i][j];
 			multi_raw[i][j] = multi_raw[i][random];
