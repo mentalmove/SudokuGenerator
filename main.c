@@ -148,7 +148,7 @@ void get_square (uint which, uint* sudoku) {
 }
 
 
-int main (int argc, const char * argv[]) {
+int main (int argc, const char* argv[]) {
 	
 	uint i;
 	
