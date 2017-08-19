@@ -115,43 +115,43 @@ void fill_small_squares (uint * linear) {
 
 int main (int argc, const char * argv[]) {
 	
-	uint * riddle;
+	uint * sudoku;
 	
 	
 	set_quasi_constants(2, &SMALL_LINE, &LINE, &TOTAL);
-	riddle = malloc(TOTAL * sizeof(uint));
-	fill_rows(riddle);
-	show_solution(riddle);
+	sudoku = malloc(TOTAL * sizeof(uint));
+	fill_rows(sudoku);
+	show_solution(sudoku);
 	printf( " \t correct rows" );
 	printf( "\n\n" );
-	fill_cols(riddle);
-	show_solution(riddle);
+	fill_cols(sudoku);
+	show_solution(sudoku);
 	printf( " \t correct columns" );
 	printf( "\n\n" );
-	fill_small_squares(riddle);
-	show_solution(riddle);
+	fill_small_squares(sudoku);
+	show_solution(sudoku);
 	printf( " \t correct small squares" );
 	
 	printf( "\n\n\n" );
 	
 	set_quasi_constants(3, &SMALL_LINE, &LINE, &TOTAL);
-	riddle = realloc(riddle, TOTAL * sizeof(uint));
-	fill_rows(riddle);
-	show_solution(riddle);
+	sudoku = realloc(sudoku, TOTAL * sizeof(uint));
+	fill_rows(sudoku);
+	show_solution(sudoku);
 	printf( " \t correct rows" );
 	printf( "\n\n" );
-	fill_cols(riddle);
-	show_solution(riddle);
+	fill_cols(sudoku);
+	show_solution(sudoku);
 	printf( " \t correct columns" );
 	printf( "\n\n" );
-	fill_small_squares(riddle);
-	show_solution(riddle);
+	fill_small_squares(sudoku);
+	show_solution(sudoku);
 	printf( " \t correct small squares" );
 	
 	printf( "\n\n" );
 	
 	
-	free(riddle);
+	free(sudoku);
 	
 	
 	return 0;
