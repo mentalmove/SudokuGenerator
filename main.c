@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 
 
 typedef unsigned int uint;
@@ -19,12 +20,91 @@ struct dimensions_collection {
 };
 
 
+void border_line(void);
+void solid_line(void);
+void dotted_line(void);
+void show_solution (uint*);
 void set_quasi_constants (uint, uint*, uint*, uint*);
 struct dimensions_collection get_collection(uint);
+void get_horizontal(uint, uint*);
+void get_vertical(uint, uint*);
+void get_square(uint, uint*);
+uint contains_element(uint*, uint, uint);
+uint set_values(uint);
 
 
 uint SMALL_LINE, LINE, TOTAL;
+uint* sudoku;
 
+uint tries_to_set = 0;
+
+
+void border_line () {
+	printf( " " );
+	for ( uint i = 0; i < 4 * pow(SMALL_LINE, 2) - 1; i++ )
+		printf( "-" );
+}
+void solid_line () {
+	printf( "|" );
+	for ( uint i = 0; i < SMALL_LINE; i++ ) {
+		printf( "---" );
+		for ( uint j = 0; j < SMALL_LINE - 1; j++ ) {
+			printf( "----" );
+		}
+		if ( i < SMALL_LINE - 1 )
+			printf( "+" );
+	}
+	printf( "|\n" );
+}
+void dotted_line () {
+	printf( "|" );
+	for ( uint i = 0; i < SMALL_LINE; i++ ) {
+		printf( "- -" );
+		for ( uint j = 0; j < SMALL_LINE - 1; j++ ) {
+			printf( " - -" );
+		}
+		printf( "|" );
+	}
+	printf( "\n" );
+}
+void show_solution (uint* solution) {
+	
+	uint i;
+	uint counter = 0;
+	
+	border_line();
+	printf( "\n" );
+	
+	for ( i = 0; i < TOTAL; i++ ) {
+		if ( i % LINE == 0 )
+			printf( "|" );
+		
+		if ( solution[i] ) {
+			printf( " %d ", solution[i]);
+			counter++;
+		}
+		else
+			printf( "   ");
+		
+		if ( i % LINE == (LINE - 1) ) {
+			printf( "|\n" );
+			if ( i != (TOTAL - 1) ) {
+				if ( i % (SMALL_LINE * LINE) == (SMALL_LINE * LINE - 1) )
+					solid_line();
+				else
+					dotted_line();
+			}
+		}
+		else {
+			if ( i % SMALL_LINE == (SMALL_LINE - 1) )
+				printf( "|");
+			else
+				printf( ":" );
+		}
+	}
+	
+	border_line();
+}
 
 void set_quasi_constants (uint small_line_value, uint* small_line, uint* line, uint* total) {
 	*small_line = small_line_value;
@@ -42,27 +122,86 @@ struct dimensions_collection get_collection (uint index) {
 	return ret;
 }
 
+void get_horizontal (uint row, uint* ret) {
+	uint j = 0;
+	for ( uint i = (row * LINE); i < (row * LINE) + LINE; i++ )
+		ret[j++] = sudoku[i];
+}
+void get_vertical (uint col, uint* ret) {
+	uint j = 0;
+	for ( uint i = col; i < TOTAL; i += LINE )
+		ret[j++] = sudoku[i];
+}
+void get_square (uint which, uint* ret) {
+	for ( uint i = 0; i < SMALL_LINE; i++ )
+		for ( uint j = 0; j < SMALL_LINE; j++ )
+			ret[SMALL_LINE * i + j] = sudoku[LINE * i + which * SMALL_LINE + j + ((uint) (which / SMALL_LINE) * (SMALL_LINE - 1) * LINE)];
+}
+
+uint contains_element (uint* the_array, uint the_element, uint length) {
+	for ( uint i = 0; i < length; i++ )
+		if ( the_array[i] == the_element )
+			return 1;
+	return 0;
+}
+
+
+uint set_values (uint index) {
+	
+	uint* elements = malloc(LINE * sizeof(uint));
+	struct dimensions_collection blocks = get_collection(index);
+	
+	for ( uint i = 1; i <= LINE; i++ ) {
+		
+		tries_to_set++;
+		
+		get_horizontal(blocks.row, elements);
+		if ( contains_element(elements, i, LINE) )
+			continue;
+		
+		get_vertical(blocks.column, elements);
+		if ( contains_element(elements, i, LINE) )
+			continue;
+		
+		get_square(blocks.small_square, elements);
+		if ( contains_element(elements, i, LINE) )
+			continue;
+		
+		sudoku[index] = i;
+		
+		if ( index == (TOTAL - 1) || set_values(index + 1) ) {
+			free(elements);
+			return 1;
+		}
+	}
+	
+	sudoku[index] = 0;
+	
+	free(elements);
+	return 0;
+}
+
 
 int main (int argc, const char* argv[]) {
 	
-	uint i;
-	struct dimensions_collection blocks;
-	
 	set_quasi_constants(2, &SMALL_LINE, &LINE, &TOTAL);
-	for ( i = 0; i < TOTAL; i++ ) {
-		blocks = get_collection(i);
-		printf( "Index %d is in row %d, column %d, square %d\n", i, blocks.row, blocks.column, blocks.small_square );
-	}
-	
+	sudoku = calloc(TOTAL, sizeof(uint));
+	uint redundant = set_values(0);
+	show_solution(sudoku);
+	printf( " \t %d tries needed", tries_to_set );
+
 	printf( "\n\n" );
 	
 	set_quasi_constants(3, &SMALL_LINE, &LINE, &TOTAL);
-	for ( i = 0; i < TOTAL; i++ ) {
-		blocks = get_collection(i);
-		printf( "Index %d is in row %d, column %d, square %d\n", i, blocks.row, blocks.column, blocks.small_square );
-	}
-
-	printf( "\n\n" );
+	sudoku = realloc(sudoku, TOTAL * sizeof(uint));
+	memset(sudoku, 0, TOTAL);
+	tries_to_set = 0;
+	redundant = set_values(0);
+	show_solution(sudoku);
+	printf( " \t %d tries needed", tries_to_set );
+	
+	
+	free(sudoku);
 	
 	
 	return 0;
