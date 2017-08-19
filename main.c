@@ -9,6 +9,10 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <time.h>
+
+
+#define PATIENCE 0
 
 
 typedef unsigned int uint;
@@ -35,8 +39,9 @@ uint set_values(uint);
 
 uint SMALL_LINE, LINE, TOTAL;
 uint* sudoku;
+uint* indices;
 
-uint tries_to_set = 0;
+unsigned long tries_to_set = 0;
 
 
 void border_line () {
@@ -148,12 +153,16 @@ uint contains_element (uint* the_array, uint the_element, uint length) {
 
 uint set_values (uint index) {
 	
+	uint real_index = indices[index];
 	uint elements[9];												// taking the larger size for both
-	struct dimensions_collection blocks = get_collection(index);
+	struct dimensions_collection blocks = get_collection(real_index);
 	
 	for ( uint i = 1; i <= LINE; i++ ) {
 		
-		tries_to_set++;
+		if ( ++tries_to_set % 16384 == 0 ) {
+			show_solution(sudoku);
+			printf( " \t %lu\n", tries_to_set );
+		}
 		
 		get_horizontal(blocks.row, elements);
 		if ( contains_element(elements, i, LINE) )
@@ -167,13 +176,13 @@ uint set_values (uint index) {
 		if ( contains_element(elements, i, LINE) )
 			continue;
 		
-		sudoku[index] = i;
+		sudoku[real_index] = i;
 		
 		if ( index == (TOTAL - 1) || set_values(index + 1) )
 			return 1;
 	}
 	
-	sudoku[index] = 0;
+	sudoku[real_index] = 0;
 	
 	return 0;
 }
@@ -181,26 +190,80 @@ uint set_values (uint index) {
 
 int main (int argc, const char* argv[]) {
 	
+	uint i, random, tmp;
+	
+	time_t t;
+	time(&t);
+	srand((unsigned int) t);
+	
+	
 	set_quasi_constants(2, &SMALL_LINE, &LINE, &TOTAL);
 	sudoku = calloc(TOTAL, sizeof(uint));
+	indices = malloc(TOTAL * sizeof(uint));
+	
+	for ( i = 0; i < TOTAL; i++ )
+		indices[i] = i;
 	uint redundant = set_values(0);
+	printf( "Forward:\n" );
 	show_solution(sudoku);
-	printf( " \t %d tries needed", tries_to_set );
+	printf( " \t %lu tries needed", tries_to_set );
+	
+	printf( "\n" );
 
+	for ( i = 0; i < TOTAL; i++ ) {
+		sudoku[i] = 0;
+		random = rand() % (TOTAL - i) + i;
+		if ( i == random )
+			continue;
+		tmp = indices[i];
+		indices[i] = indices[random];
+		indices[random] = tmp;
+	}
+	tries_to_set = 0;
+	redundant = set_values(0);
+	printf( "Random:\n" );
+	show_solution(sudoku);
+	printf( " \t %lu tries needed", tries_to_set );
+
+	
 	printf( "\n\n" );
+	
 	
 	set_quasi_constants(3, &SMALL_LINE, &LINE, &TOTAL);
 	sudoku = realloc(sudoku, TOTAL * sizeof(uint));
-	memset(sudoku, 0, TOTAL);
+	indices = realloc(indices, TOTAL * sizeof(uint));
+	for ( i = 0; i < TOTAL; i++ ) {
+		sudoku[i] = 0;
+		indices[i] = i;
+	}
 	tries_to_set = 0;
 	redundant = set_values(0);
+	printf( "Forward:\n" );
 	show_solution(sudoku);
-	printf( " \t %d tries needed", tries_to_set );
+	printf( " \t %lu tries needed", tries_to_set );
+	
+	if ( PATIENCE ) {
+		for ( i = 0; i < TOTAL; i++ ) {
+			sudoku[i] = 0;
+			random = rand() % (TOTAL - i) + i;
+			if ( i == random )
+				continue;
+			tmp = indices[i];
+			indices[i] = indices[random];
+			indices[random] = tmp;
+		}
+		tries_to_set = 0;
+		redundant = set_values(0);
+		printf( "Random:\n" );
+		show_solution(sudoku);
+		printf( " \t %lu tries needed", tries_to_set );
+	}
 	
 	printf( "\n\n" );
 	
 	
 	free(sudoku);
+	free(indices);
 	
 	
 	return 0;
