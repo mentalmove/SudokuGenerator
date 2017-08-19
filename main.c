@@ -2,8 +2,7 @@
 //  main.c
 //  SudokuGenerator
 //
-//  Created by Malte Pagel on 22.11.14.
-//  Copyright (c) 2014 Malte Pagel. All rights reserved.
+//  Malte Pagel
 //
 
 #include <stdio.h>
