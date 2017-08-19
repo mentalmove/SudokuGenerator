@@ -228,7 +228,7 @@ int main (int argc, const char* argv[]) {
 	
 	set_quasi_constants(3, &SMALL_LINE, &LINE, &TOTAL);
 	sudoku = realloc(sudoku, TOTAL * sizeof(uint));
-	unsolved = realloc(sudoku, TOTAL * sizeof(uint));
+	unsolved = realloc(unsolved, TOTAL * sizeof(uint));
 	memset(sudoku, 0, TOTAL);
 	tries_to_set = 0;
 	redundant = set_values(0, 0);
@@ -249,6 +249,7 @@ int main (int argc, const char* argv[]) {
 	
 	
 	free(sudoku);
+	free(unsolved);
 	
 	
 	return 0;
