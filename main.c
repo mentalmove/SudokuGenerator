@@ -148,7 +148,7 @@ uint contains_element (uint* the_array, uint the_element, uint length) {
 
 uint set_values (uint index) {
 	
-	uint* elements = malloc(LINE * sizeof(uint));
+	uint elements[9];												// taking the larger size for both
 	struct dimensions_collection blocks = get_collection(index);
 	
 	for ( uint i = 1; i <= LINE; i++ ) {
@@ -169,15 +169,12 @@ uint set_values (uint index) {
 		
 		sudoku[index] = i;
 		
-		if ( index == (TOTAL - 1) || set_values(index + 1) ) {
-			free(elements);
+		if ( index == (TOTAL - 1) || set_values(index + 1) )
 			return 1;
-		}
 	}
 	
 	sudoku[index] = 0;
 	
-	free(elements);
 	return 0;
 }
 
