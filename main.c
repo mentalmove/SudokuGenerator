@@ -41,7 +41,7 @@ uint SMALL_LINE, LINE, TOTAL;
 uint* sudoku;
 uint* indices;
 
-unsigned long tries_to_set = 0;
+long double tries_to_set = 0;
 
 
 void border_line () {
@@ -159,9 +159,11 @@ uint set_values (uint index) {
 	
 	for ( uint i = 1; i <= LINE; i++ ) {
 		
-		if ( ++tries_to_set % 16384 == 0 ) {
+		tries_to_set++;
+		
+		if ( (uint) tries_to_set % 16384 == 0 ) {
 			show_solution(sudoku);
-			printf( " \t %lu\n", tries_to_set );
+			printf( " \t %Lf\n", tries_to_set );
 		}
 		
 		get_horizontal(blocks.row, elements);
@@ -190,7 +192,7 @@ uint set_values (uint index) {
 
 int main (int argc, const char* argv[]) {
 	
-	uint i, random, tmp;
+	uint i, determined;
 	
 	time_t t;
 	time(&t);
@@ -201,29 +203,28 @@ int main (int argc, const char* argv[]) {
 	sudoku = calloc(TOTAL, sizeof(uint));
 	indices = malloc(TOTAL * sizeof(uint));
 	
-	for ( i = 0; i < TOTAL; i++ )
-		indices[i] = i;
+	indices[0] = 0;
+	for ( i = 1; i < TOTAL; i++ )
+		indices[i] = (indices[i - 1] + LINE + 1) % TOTAL;
 	uint redundant = set_values(0);
-	printf( "Forward:\n" );
+	printf( "Easy:\n" );
 	show_solution(sudoku);
-	printf( " \t %lu tries needed", tries_to_set );
+	printf( " \t %d tries needed", (uint) tries_to_set );
 	
 	printf( "\n" );
 
 	for ( i = 0; i < TOTAL; i++ ) {
 		sudoku[i] = 0;
-		random = rand() % (TOTAL - i) + i;
-		if ( i == random )
-			continue;
-		tmp = indices[i];
-		indices[i] = indices[random];
-		indices[random] = tmp;
+		determined = (2 * i) % TOTAL;
+		if ( i >= (TOTAL / 2) && (TOTAL % 2) == 0 )
+			determined++;
+		indices[i] = determined;
 	}
 	tries_to_set = 0;
 	redundant = set_values(0);
-	printf( "Random:\n" );
+	printf( "Difficult:\n" );
 	show_solution(sudoku);
-	printf( " \t %lu tries needed", tries_to_set );
+	printf( " \t %d tries needed", (uint) tries_to_set );
 
 	
 	printf( "\n\n" );
@@ -232,31 +233,31 @@ int main (int argc, const char* argv[]) {
 	set_quasi_constants(3, &SMALL_LINE, &LINE, &TOTAL);
 	sudoku = realloc(sudoku, TOTAL * sizeof(uint));
 	indices = realloc(indices, TOTAL * sizeof(uint));
-	for ( i = 0; i < TOTAL; i++ ) {
+	indices[0] = 0;
+	sudoku[0] = 0;
+	for ( i = 1; i < TOTAL; i++ ) {
 		sudoku[i] = 0;
-		indices[i] = i;
+		indices[i] = (indices[i - 1] + LINE + 1) % TOTAL;
 	}
 	tries_to_set = 0;
 	redundant = set_values(0);
-	printf( "Forward:\n" );
+	printf( "Easy:\n" );
 	show_solution(sudoku);
-	printf( " \t %lu tries needed", tries_to_set );
+	printf( " \t %d tries needed", (uint) tries_to_set );
 	
 	if ( PATIENCE ) {
 		for ( i = 0; i < TOTAL; i++ ) {
 			sudoku[i] = 0;
-			random = rand() % (TOTAL - i) + i;
-			if ( i == random )
-				continue;
-			tmp = indices[i];
-			indices[i] = indices[random];
-			indices[random] = tmp;
+			determined = (2 * i) % TOTAL;
+			if ( i >= (TOTAL / 2) && (TOTAL % 2) == 0 )
+				determined++;
+			indices[i] = determined;
 		}
 		tries_to_set = 0;
 		redundant = set_values(0);
-		printf( "Random:\n" );
+		printf( "Difficult:\n" );
 		show_solution(sudoku);
-		printf( " \t %lu tries needed", tries_to_set );
+		printf( " \t %Lf tries needed", tries_to_set );
 	}
 	
 	printf( "\n\n" );
