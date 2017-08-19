@@ -200,6 +200,8 @@ int main (int argc, const char* argv[]) {
 	show_solution(sudoku);
 	printf( " \t %d tries needed", tries_to_set );
 	
+	printf( "\n\n" );
+	
 	
 	free(sudoku);
 	
