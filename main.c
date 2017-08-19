@@ -93,27 +93,27 @@ void show_solution (uint* solution) {
 	border_line();
 }
 
-void set_quasi_constants (uint small_line_value, uint * small_line, uint * line, uint * total) {
+void set_quasi_constants (uint small_line_value, uint* small_line, uint* line, uint* total) {
 	*small_line = small_line_value;
 	*line = pow(small_line_value, 2);
 	*total = pow(small_line_value, 4);
 }
 
-void fill_rows (uint * linear) {
+void fill_rows (uint* linear) {
 	for ( uint i = 0; i < TOTAL; i++ )
 		linear[i] = i % LINE + 1;
 }
-void fill_cols (uint * linear) {
+void fill_cols (uint* linear) {
 	for ( uint i = 0; i < TOTAL; i++ )
 		linear[i] = i / LINE + 1;
 }
-void fill_small_squares (uint * linear) {
+void fill_small_squares (uint* linear) {
 	for ( uint i = 0; i < TOTAL; i++ )
 		linear[i] = (i / LINE) % SMALL_LINE * SMALL_LINE + i % SMALL_LINE + 1;
 }
 
 
-int main (int argc, const char * argv[]) {
+int main (int argc, const char* argv[]) {
 	
 	uint * sudoku;
 	
