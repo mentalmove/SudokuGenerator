@@ -30,13 +30,16 @@ void get_horizontal(uint, uint*);
 void get_vertical(uint, uint*);
 void get_square(uint, uint*);
 uint contains_element(uint*, uint, uint);
-uint set_values(uint);
+uint set_values(uint, uint);
+void take_back(uint);
 
 
 uint SMALL_LINE, LINE, TOTAL;
 uint* sudoku;
+uint* unsolved;
 
 uint tries_to_set = 0;
+uint global_unset_count = 0;
 
 
 void border_line () {
@@ -146,7 +149,7 @@ uint contains_element (uint* the_array, uint the_element, uint length) {
 }
 
 
-uint set_values (uint index) {
+uint set_values (uint index, uint forbidden_number) {
 	
 	uint elements[9];												// taking the larger size for both
 	struct dimensions_collection blocks = get_collection(index);
@@ -169,7 +172,7 @@ uint set_values (uint index) {
 		
 		sudoku[index] = i;
 		
-		if ( index == (TOTAL - 1) || set_values(index + 1) )
+		if ( index == (TOTAL - 1) || set_values((index + 1), 0) )
 			return 1;
 	}
 	
@@ -178,24 +181,69 @@ uint set_values (uint index) {
 	return 0;
 }
 
+void take_back (uint unset_count) {
+	
+	global_unset_count++;
+	
+	uint i;
+	
+	uint tmp = sudoku[TOTAL - unset_count];
+	uint redundant = set_values((TOTAL - unset_count), tmp);
+	
+	if ( !redundant ) {
+		unsolved[TOTAL - unset_count] = 0;
+		take_back(++unset_count);
+	}
+	else {
+		sudoku[TOTAL - unset_count] = tmp;
+		for ( i = 1; i < unset_count; i++ )
+			sudoku[TOTAL - unset_count + i] = 0;
+		
+		if ( global_unset_count < TOTAL )
+			take_back(unset_count);
+	}
+}
+
 
 int main (int argc, const char* argv[]) {
 	
 	set_quasi_constants(2, &SMALL_LINE, &LINE, &TOTAL);
 	sudoku = calloc(TOTAL, sizeof(uint));
-	uint redundant = set_values(0);
+	unsolved = calloc(TOTAL, sizeof(uint));;
+	uint redundant = set_values(0, 0);
 	show_solution(sudoku);
 	printf( " \t %d tries needed", tries_to_set );
+	
+	printf( "\n" );
+	
+	memcpy(unsolved, sudoku, (TOTAL * sizeof(int)));
+	tries_to_set = 0;
+	take_back(1);
+	show_solution(unsolved);
+	printf( " \t %d additional", tries_to_set );
 
+	
 	printf( "\n\n" );
+	
 	
 	set_quasi_constants(3, &SMALL_LINE, &LINE, &TOTAL);
 	sudoku = realloc(sudoku, TOTAL * sizeof(uint));
+	unsolved = realloc(sudoku, TOTAL * sizeof(uint));
 	memset(sudoku, 0, TOTAL);
 	tries_to_set = 0;
-	redundant = set_values(0);
+	redundant = set_values(0, 0);
 	show_solution(sudoku);
 	printf( " \t %d tries needed", tries_to_set );
+	
+	printf( "\n" );
+	
+	memcpy(unsolved, sudoku, (TOTAL * sizeof(int)));
+	tries_to_set = 0;
+	global_unset_count = 0;
+	take_back(1);
+	show_solution(unsolved);
+	printf( " \t %d additional", tries_to_set );
+	
 	
 	printf( "\n\n" );
 	
