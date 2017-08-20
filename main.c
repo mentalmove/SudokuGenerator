@@ -12,9 +12,6 @@
 #include <time.h>
 
 
-#define PATIENCE 0
-
-
 typedef unsigned int uint;
 
 struct dimensions_collection {
@@ -33,6 +30,7 @@ struct dimensions_collection get_collection(uint);
 void get_horizontal(uint, uint*);
 void get_vertical(uint, uint*);
 void get_square(uint, uint*);
+void fill_small_squares(uint*);
 uint contains_element(uint*, uint, uint);
 uint set_values(uint);
 
@@ -41,7 +39,7 @@ uint SMALL_LINE, LINE, TOTAL;
 uint* sudoku;
 uint* indices;
 
-long double tries_to_set = 0;
+uint tries_to_set = 0;
 
 
 void border_line () {
@@ -143,6 +141,11 @@ void get_square (uint which, uint* ret) {
 			ret[SMALL_LINE * i + j] = sudoku[LINE * i + which * SMALL_LINE + j + ((uint) (which / SMALL_LINE) * (SMALL_LINE - 1) * LINE)];
 }
 
+void fill_small_squares (uint* linear) {
+	for ( uint i = 0; i < TOTAL; i++ )
+		linear[i] = (i / LINE) % SMALL_LINE * SMALL_LINE + i % SMALL_LINE + i / (LINE * SMALL_LINE) * LINE * SMALL_LINE + i % LINE / SMALL_LINE * LINE;
+}
+
 uint contains_element (uint* the_array, uint the_element, uint length) {
 	for ( uint i = 0; i < length; i++ )
 		if ( the_array[i] == the_element )
@@ -160,11 +163,6 @@ uint set_values (uint index) {
 	for ( uint i = 1; i <= LINE; i++ ) {
 		
 		tries_to_set++;
-		
-		if ( (uint) tries_to_set % 16384 == 0 ) {
-			show_solution(sudoku);
-			printf( " \t %Lf\n", tries_to_set );
-		}
 		
 		get_horizontal(blocks.row, elements);
 		if ( contains_element(elements, i, LINE) )
@@ -192,8 +190,7 @@ uint set_values (uint index) {
 
 int main (int argc, const char* argv[]) {
 	
-	uint i, determined;
-	
+	uint i, j, random, tmp, redundant;
 	time_t t;
 	time(&t);
 	srand((unsigned int) t);
@@ -202,65 +199,67 @@ int main (int argc, const char* argv[]) {
 	set_quasi_constants(2, &SMALL_LINE, &LINE, &TOTAL);
 	sudoku = calloc(TOTAL, sizeof(uint));
 	indices = malloc(TOTAL * sizeof(uint));
-	
-	indices[0] = 0;
-	for ( i = 1; i < TOTAL; i++ )
-		indices[i] = (indices[i - 1] + LINE + 1) % TOTAL;
-	uint redundant = set_values(0);
-	printf( "Easy:\n" );
-	show_solution(sudoku);
-	printf( " \t %d tries needed", (uint) tries_to_set );
-	
-	printf( "\n" );
-
-	for ( i = 0; i < TOTAL; i++ ) {
-		sudoku[i] = 0;
-		determined = (2 * i) % TOTAL;
-		if ( i >= (TOTAL / 2) && (TOTAL % 2) == 0 )
-			determined++;
-		indices[i] = determined;
-	}
-	tries_to_set = 0;
+	fill_small_squares(indices);
 	redundant = set_values(0);
-	printf( "Difficult:\n" );
 	show_solution(sudoku);
-	printf( " \t %d tries needed", (uint) tries_to_set );
-
+	printf( " \t %u tries needed", (uint) tries_to_set );
 	
 	printf( "\n\n" );
+	
+	for ( i = 0; i < LINE; i++ ) {
+		for ( j = (i * LINE); j < ((i + 1) * LINE); j++ ) {
+			random = rand() % ((i + 1) * LINE - j) + j;
+			if ( j == random )
+				continue;
+			tmp = indices[j];
+			indices[j] = indices[random];
+			indices[random] = tmp;
+		}
+	}
+	for ( i = 0; i < TOTAL; i++ )
+		sudoku[i] = 0;
+	tries_to_set = 0;
+	redundant = set_values(0);
+	printf( "Shuffled squares:\n" );
+	show_solution(sudoku);
+	printf( " \t %u tries needed", tries_to_set );
+	
+	
+	printf( "\n\n\n" );
 	
 	
 	set_quasi_constants(3, &SMALL_LINE, &LINE, &TOTAL);
 	sudoku = realloc(sudoku, TOTAL * sizeof(uint));
 	indices = realloc(indices, TOTAL * sizeof(uint));
-	indices[0] = 0;
-	sudoku[0] = 0;
-	for ( i = 1; i < TOTAL; i++ ) {
+	for ( i = 0; i < TOTAL; i++ )
 		sudoku[i] = 0;
-		indices[i] = (indices[i - 1] + LINE + 1) % TOTAL;
-	}
-	tries_to_set = 0;
+	fill_small_squares(indices);
 	redundant = set_values(0);
-	printf( "Easy:\n" );
 	show_solution(sudoku);
-	printf( " \t %d tries needed", (uint) tries_to_set );
-	
-	if ( PATIENCE ) {
-		for ( i = 0; i < TOTAL; i++ ) {
-			sudoku[i] = 0;
-			determined = (2 * i) % TOTAL;
-			if ( i >= (TOTAL / 2) && (TOTAL % 2) == 0 )
-				determined++;
-			indices[i] = determined;
-		}
-		tries_to_set = 0;
-		redundant = set_values(0);
-		printf( "Difficult:\n" );
-		show_solution(sudoku);
-		printf( " \t %Lf tries needed", tries_to_set );
-	}
+	printf( " \t %u tries needed", (uint) tries_to_set );
 	
 	printf( "\n\n" );
+	
+	for ( i = 0; i < LINE; i++ ) {
+		for ( j = (i * LINE); j < ((i + 1) * LINE); j++ ) {
+			random = rand() % ((i + 1) * LINE - j) + j;
+			if ( j == random )
+				continue;
+			tmp = indices[j];
+			indices[j] = indices[random];
+			indices[random] = tmp;
+		}
+	}
+	for ( i = 0; i < TOTAL; i++ )
+		sudoku[i] = 0;
+	tries_to_set = 0;
+	redundant = set_values(0);
+	printf( "Shuffled squares:\n" );
+	show_solution(sudoku);
+	printf( " \t %u tries needed", tries_to_set );
+	
+	
+	printf( "\n\n\n" );
 	
 	
 	free(sudoku);
