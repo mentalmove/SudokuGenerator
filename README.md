@@ -53,13 +53,15 @@ are much more presumable.
 
 In the astronomically unlikely event of the need of many steps
 the algorithm stops at some point.
-<br>
 
-The branches from Step1 to Step8 explain generating a sudoku in general
+&nbsp;
+
+The branches from **Step1** to **Step8** explain generating a sudoku in general
 as well as this approach in particular.
-<br>
 
-In case you are not interested in algorithms at all and just want to play:
+&nbsp;
+
+In case you are not interested in algorithms at all and just want to play:  
 Don't forget to set constant `SHOW_SOLVED` to `0`
 
 Enjoy!
