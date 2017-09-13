@@ -137,7 +137,7 @@ void get_vertical (uint col, uint* sudoku) {
 	printf( "\n" );
 }
 void get_square (uint which, uint* sudoku) {
-	printf( "Sqaure %d contains ", which );
+	printf( "Square %d contains ", which );
 	for ( int i = 0; i < SMALL_LINE; i++ )
 		for ( int j = 0; j < SMALL_LINE; j++ ) {
 			if ( i || j )
