@@ -1,4 +1,4 @@
-## Step I - Get Sections
+## Step II - Get Sections
 
 For demonstrating purpose, valid solved sudokus are provided:
 
