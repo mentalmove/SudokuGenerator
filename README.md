@@ -53,4 +53,4 @@ due to the fact that they deal with
 `LINE` instead of `TOTAL` elements.  
 They will be used later to check if a potentially to set number
 collides with previously set ones - the only difference
-will be in filling a collection instead of just printing.
+will be filling a collection instead of just printing.
