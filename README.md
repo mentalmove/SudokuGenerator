@@ -8,13 +8,13 @@ They are written uppercase since they usually would be constants
 
 ---
 
-```
+```c
 void show_solution(unsigned int*)
 ```
 
 with its helper functions
 
-```
+```c
 void border_line()
 void solid_line()
 void dotted_line()
@@ -50,7 +50,7 @@ and every small square exactly once.
 
 Functions
 
-```
+```c
 void fill_rows(unsigned int*);
 void fill_cols(unsigned int*);
 void fill_small_squares(unsigned int*);
