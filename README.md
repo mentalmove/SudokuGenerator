@@ -48,7 +48,7 @@ collect all elements of a given row, column or small square:
 
 They use the same arithmetic principles as 
 `fill_rows()`, `fill_cols()` and `fill_small_squares()`
-of the last example but look a little more frightening
+of the last step but look a little more frightening
 due to the fact that they deal with
 `LINE` instead of `TOTAL` elements.  
 They will be used later to check if a potentially to set number
