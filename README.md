@@ -15,9 +15,9 @@ void show_solution(unsigned int*)
 with its helper functions
 
 ```c
-void border_line()
-void solid_line()
-void dotted_line()
+void border_line();
+void solid_line();
+void dotted_line();
 ```
 
 just displays a (solved or unsolved) sudoku;
