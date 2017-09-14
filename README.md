@@ -54,7 +54,7 @@ return UNSUCCESS
 
 This is implemented in function 
 
-```
+```c
 unsigned int set_values(unsigned int);
 ```
 
