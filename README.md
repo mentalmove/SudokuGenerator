@@ -28,7 +28,7 @@ For demonstrating purpose, valid solved sudokus are provided:
 
 The functions
 
-```
+```c
 void get_horizontal(unsigned int, unsigned int*);
 void get_vertical(unsigned int, unsigned int*);
 void get_square(unsigned int, unsigned int*);
