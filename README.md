@@ -2,7 +2,7 @@
 
 To check if a number potentially to set already exists in row, column or small square,
 the function
-```
+```c
 unsigned int contains_element(unsigned int*, unsigned int, unsigned int);
 ```
 is introduced: For the actual index, _row_, _column_ and _small square_ are discovered by
