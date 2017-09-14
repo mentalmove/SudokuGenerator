@@ -4,7 +4,7 @@ Now the opposite - row, column and small square shall be
 assigned to a given index. The information will be stored
 in an instance of
 
-```
+```c
 struct dimensions_collection {
 	int row;
 	int column;
@@ -14,7 +14,7 @@ struct dimensions_collection {
 
 The responsible function is
 
-```
+```c
 struct dimensions_collection get_collection(unsigned int);
 ```
 
