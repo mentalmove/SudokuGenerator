@@ -21,7 +21,7 @@ struct dimensions_collection get_collection(unsigned int);
 Fortunately, since the information is needed only for one index,
 `get_collection()` looks much more like
 `fill_rows()`, `fill_cols()` and `fill_small_squares()`
-of the first example.
+of the first step.
 
 Displayed on screen, the result could look like
 
