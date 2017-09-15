@@ -12,7 +12,7 @@
 #include <time.h>
 
 
-#define PATIENCE 0
+#define PATIENCE 0			// might take minutes, maybe hours
 
 
 typedef unsigned int uint;
