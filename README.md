@@ -67,7 +67,7 @@ to the following unsolved sudoku, boring as well:
 When used this way, `take_back()` stops at the first value to take back
 which allows more than one solution. When constant `REPEATED_TRIES`
 is set to `1`, it will try to take back another value instead. In this case,
-a global counter variable has to ensure that every value to potentially take back
+a global counter variable has to ensure that every value potentially to take back
 must be tried only once. Result will be
 ```
  -----------------------------------
