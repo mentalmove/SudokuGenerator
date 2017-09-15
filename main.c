@@ -12,7 +12,7 @@
 #include <time.h>
 
 
-#define PATIENCE 0
+#define PATIENCE 0			// might take weeks, maybe years
 
 
 typedef unsigned int uint;
@@ -163,7 +163,7 @@ uint set_values (uint index) {
 		
 		if ( (uint) tries_to_set % 16384 == 0 ) {
 			show_solution(sudoku);
-			printf( " \t %Lf\n", tries_to_set );
+			printf( " \t %.Lf\n", tries_to_set );
 		}
 		
 		get_horizontal(blocks.row, elements);
