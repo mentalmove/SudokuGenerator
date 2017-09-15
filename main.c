@@ -233,6 +233,7 @@ int main (int argc, const char* argv[]) {
 	indices = realloc(indices, TOTAL * sizeof(uint));
 	for ( i = 0; i < TOTAL; i++ )
 		sudoku[i] = 0;
+	tries_to_set = 0;
 	fill_small_squares(indices);
 	redundant = set_values(0);
 	show_solution(sudoku);
