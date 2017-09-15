@@ -216,7 +216,7 @@ int main (int argc, const char* argv[]) {
 	for ( i = 0; i < TOTAL; i++ ) {
 		sudoku[i] = 0;
 		determined = (2 * i) % TOTAL;
-		if ( i >= (TOTAL / 2) && (TOTAL % 2) == 0 )
+		if ( i >= (TOTAL / 2) )
 			determined++;
 		indices[i] = determined;
 	}
@@ -245,12 +245,11 @@ int main (int argc, const char* argv[]) {
 	show_solution(sudoku);
 	printf( " \t %d tries needed", (uint) tries_to_set );
 	
+	
 	if ( PATIENCE ) {
 		for ( i = 0; i < TOTAL; i++ ) {
 			sudoku[i] = 0;
 			determined = (2 * i) % TOTAL;
-			if ( i >= (TOTAL / 2) && (TOTAL % 2) == 0 )
-				determined++;
 			indices[i] = determined;
 		}
 		tries_to_set = 0;

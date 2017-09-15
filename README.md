@@ -1,3 +1,41 @@
+## Step VII - Different Indices
+
+At least in theory, the generator application is ready:  
+It is able to produce a vaild unsolved sudoku -
+unfortunately always the same.  
+This disadvantage could be compensated using randomisation,
+explained in step 5.
+
+Without improvements, this suggestion lacks in practical relevance.  
+A suitable collection of indices should have at least three properties:
+- It should offer variety, i.e. be strongly randomised
+- It should enable building a sudoku in reasonable time
+- It should lead to an interesting sudoku, i.e. one with few remaining numbers
+
+Fortunately, the two last points are correlated:
+Creating a solved sudoku and transforming it to an unsolved sudoku
+use the same functionality; problems finding valid numbers
+and problems erasing numbers should have identical reasons.
+In other words: Solving one of these problems should
+solve the other.
+
+### Example indices
+
+Before diving into theoretical considerations, two different
+collections of indices shall be examined.
+
+&nbsp;
+
+In the first one, indices walk diagonally:
+#### Easy to solve
+```c
+unsigned int i;
+unsigned int* indices = malloc(TOTAL * sizeof(unsigned int));
+indices[0] = 0;
+for ( i = 1; i < TOTAL; i++ )
+    indices[i] = (indices[i - 1] + LINE + 1) % TOTAL;
+```
+Displayed graphically:
 ```
  --------------------------------------------
 |  0 : 10 : 20 | 30 : 40 : 50 | 60 : 70 : 80 |
@@ -18,7 +56,24 @@
 |- - - - - - - |- - - - - - - |- - - - - - - |
 | 72 :  1 : 11 | 21 : 31 : 41 | 51 : 61 : 71 |
  --------------------------------------------
- 
+```
+It needs only 405 steps to build a solved sudoku using `indices`.
+
+&nbsp;
+
+In the second one, even and odd indices are told apart:
+#### More or less impossible to solve
+```c
+unsigned int determined;
+for ( i = 0; i < TOTAL; i++ ) {
+    determined = (2 * i) % TOTAL;
+    if ( i >= (TOTAL / 2) && (TOTAL % 2) == 0 )         // For TOTAL being even only 
+        determined++;
+    indices[i] = determined;
+}
+```
+Displayed graphically:
+``` 
   --------------------------------------------
 |  0 :  2 :  4 |  6 :  8 : 10 | 12 : 14 : 16 |
 |--------------+--------------+--------------|
@@ -39,3 +94,59 @@
 | 63 : 65 : 67 | 69 : 71 : 73 | 75 : 77 : 79 |
  --------------------------------------------
 ```
+In human standards, the function never terminates what easily can be checked by setting constant `PATIENCE` to `1`.
+
+&nbsp;
+
+### Explanation
+
+Understanding why the second example needs many steps is easier as understanding why the first example is frugal.
+
+&nbsp;
+
+```
+ -----------------------------------
+| 1 : 8 : 2 | 7 : 3 :   | 4 :   : 5 |
+|- - - - - -|- - - - - -|- - - - - -|
+|   : 3 :   | 1 :   : 2 |   : 6 :   |
+|- - - - - -|- - - - - -|- - - - - -|
+| 4 :   : 5 |   : 6 :   | 1 :   : 2 |
+|-----------+-----------+-----------|
+|   : 1 :   | 2 :   : 3 |   : 4 :   |
+|- - - - - -|- - - - - -|- - - - - -|
+| 2 :   : 3 |   : 1 :   | 5 :   : 6 |
+|- - - - - -|- - - - - -|- - - - - -|
+|   : 4 :   | 5 :   : 6 |   : 1 :   |
+|-----------+-----------+-----------|
+| 3 :   : 1 |   : 2 :   | 6 :   : 4 |
+|- - - - - -|- - - - - -|- - - - - -|
+|   : 2 :   | 3 :   : 1 |   : 5 :   |
+|- - - - - -|- - - - - -|- - - - - -|
+| 5 :   : 4 |   : 9 :   | 2 :   : 3 |
+ ----------------------------------- 	 After 2006 tries 
+```
+
+As long as there are free spaces beneath every place holding a number,
+the algorithm finds suitable seeming new numbers without difficulties.
+The problem is that some of the chosen numbers disable any possibility
+for their neighbours - but the relevant indices are not neighboured at all!
+When reaching a dead end, the algorithm goes one step back, tries some
+possibilities, goes to the dead end again, will fail and go back...  
+Even if there were only 2 choices for every place
+(there are obviously more when using 9 numbers),
+repairing a single dead end's cause would cost more than
+2<sup>40</sup> = 1099511627776 steps.
+
+The general rule for problems like this is
+> The effective runtime for recursive backtracking functions
+is exponentially proportional to the distance between
+a failure and its detection.
+
+This also explains why the first example doesn't show a performance problem:
+Causing dead ends will have almost immediate influence
+(and can be repaired soon).
+
+&nbsp;
+
+Simplified, the moral is:
+> If failing can't be avoided, fail early.
