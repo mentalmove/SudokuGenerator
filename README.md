@@ -68,7 +68,7 @@ When used this way, `take_back()` stops at the first value to take back
 which allows more than one solution. When constant `REPEATED_TRIES`
 is set to `1`, it will try to take back another value instead. In this case,
 a global counter variable has to ensure that every value potentially to take back
-must be tried only once. Result will be
+must be tried only once. Result will be:
 ```
  -----------------------------------
 | 1 : 2 : 3 | 4 : 5 : 6 | 7 : 8 :   |
