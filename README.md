@@ -60,7 +60,7 @@ unsigned int set_values(unsigned int);
 
 ---
 
-Result will be a valid unsolved, but unfortunately boring sudoku:
+Result will be a valid solved, but unfortunately boring sudoku:
 
 
 ```
