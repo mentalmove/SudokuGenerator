@@ -139,8 +139,8 @@ repairing a single dead end's cause would cost more than
 
 The general rule for problems like this is
 > The effective runtime for recursive backtracking functions
-is exponentially proportional to the distance between
-a failure and its detection.
+> is exponentially proportional to the distance between
+> a failure and its detection.
 
 This also explains why the first example doesn't show a performance problem:
 Causing dead ends will have almost immediate influence
