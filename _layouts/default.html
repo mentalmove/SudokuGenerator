@@ -108,7 +108,7 @@ function content_loaded (receiveReq, element, url) {
     function load_content (url, element) {
         var receiveReq = new XMLHttpRequest();
         if ( receiveReq.readyState == 4 || receiveReq.readyState == 0 ) {
-            receiveReq.open("GET", url, true);
+            receiveReq.open("GET", url + "?a=" + Math.ceil(Math.random() * 998), true);
             receiveReq.onreadystatechange = function () {
                 content_loaded(receiveReq, element, url);
             };
