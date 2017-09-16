@@ -56,7 +56,7 @@ the algorithm stops at some point.
 
 &nbsp;
 
-The branches from **Step1** to **Step8** explain generating a sudoku in general
+The branches from **[Step1](https://github.com/mentalmove/SudokuGenerator/tree/Step1-CreateAndShow)** to **[Step8](https://github.com/mentalmove/SudokuGenerator/tree/Step8-SquareRules)** explain generating a sudoku in general
 as well as this approach in particular.
 
 &nbsp;
