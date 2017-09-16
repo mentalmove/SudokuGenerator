@@ -31,7 +31,7 @@ adding a line break after `LINE` symbols
 with symbols (following common convention positive integer numbers).
 The collection is created as a linear
 and not as a multidimensional array for two reasons:
-- In fact, so-called *multidimensional* arrays do not reflect
+- In fact, so-called _multidimensional_ arrays do not reflect
 multiple dimensions; one is always dependent of another
 while rows and columns shall be really equivalent here.
 - Small squares do not reflect a dimension in a common
@@ -44,7 +44,7 @@ transformed temporarily.
 
 General sudoku rule is
 > Every symbol shall appear in every row, every column
-and every small square exactly once.
+> and every small square exactly once.
 
 &nbsp;
 
