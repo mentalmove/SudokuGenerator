@@ -31,6 +31,7 @@ void get_horizontal(uint, uint*);
 void get_vertical(uint, uint*);
 void get_square(uint, uint*);
 void fill_small_squares(uint*);
+void shuffle_indices(uint*);
 uint contains_element(uint*, uint, uint);
 uint set_values(uint);
 
@@ -153,6 +154,24 @@ uint contains_element (uint* the_array, uint the_element, uint length) {
 	return 0;
 }
 
+void shuffle_indices (uint* indices) {
+
+	uint meta_indices[81];											// taking the larger size for both
+	uint i, j, random, tmp;
+	
+	for ( i = 0; i < TOTAL; i++ )
+		meta_indices[i] = indices[i];
+	
+	for ( i = 0; i < LINE; i++ ) {
+		for ( j = (i * LINE); j < ((i + 1) * LINE); j++ ) {
+			random = rand() % ((i + 1) * LINE - j) + j;
+			tmp = indices[meta_indices[j]];
+			indices[meta_indices[j]] = indices[meta_indices[random]];
+			indices[meta_indices[random]] = tmp;
+		}
+	}
+}
+
 
 uint set_values (uint index) {
 	
@@ -190,7 +209,7 @@ uint set_values (uint index) {
 
 int main (int argc, const char* argv[]) {
 	
-	uint i, j, random, tmp, redundant;
+	uint i, redundant;
 	time_t t;
 	time(&t);
 	srand((unsigned int) t);
@@ -199,6 +218,7 @@ int main (int argc, const char* argv[]) {
 	set_quasi_constants(2, &SMALL_LINE, &LINE, &TOTAL);
 	sudoku = calloc(TOTAL, sizeof(uint));
 	indices = malloc(TOTAL * sizeof(uint));
+	
 	fill_small_squares(indices);
 	redundant = set_values(0);
 	show_solution(sudoku);
@@ -206,16 +226,7 @@ int main (int argc, const char* argv[]) {
 	
 	printf( "\n\n" );
 	
-	for ( i = 0; i < LINE; i++ ) {
-		for ( j = (i * LINE); j < ((i + 1) * LINE); j++ ) {
-			random = rand() % ((i + 1) * LINE - j) + j;
-			if ( j == random )
-				continue;
-			tmp = indices[j];
-			indices[j] = indices[random];
-			indices[random] = tmp;
-		}
-	}
+	shuffle_indices(indices);
 	for ( i = 0; i < TOTAL; i++ )
 		sudoku[i] = 0;
 	tries_to_set = 0;
@@ -226,7 +237,7 @@ int main (int argc, const char* argv[]) {
 	
 	
 	printf( "\n\n\n" );
-	
+
 	
 	set_quasi_constants(3, &SMALL_LINE, &LINE, &TOTAL);
 	sudoku = realloc(sudoku, TOTAL * sizeof(uint));
@@ -241,16 +252,7 @@ int main (int argc, const char* argv[]) {
 	
 	printf( "\n\n" );
 	
-	for ( i = 0; i < LINE; i++ ) {
-		for ( j = (i * LINE); j < ((i + 1) * LINE); j++ ) {
-			random = rand() % ((i + 1) * LINE - j) + j;
-			if ( j == random )
-				continue;
-			tmp = indices[j];
-			indices[j] = indices[random];
-			indices[random] = tmp;
-		}
-	}
+	shuffle_indices(indices);
 	for ( i = 0; i < TOTAL; i++ )
 		sudoku[i] = 0;
 	tries_to_set = 0;
@@ -261,7 +263,7 @@ int main (int argc, const char* argv[]) {
 	
 	
 	printf( "\n\n\n" );
-	
+
 	
 	free(sudoku);
 	free(indices);
