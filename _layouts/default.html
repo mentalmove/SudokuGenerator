@@ -50,7 +50,75 @@
 
       {{ content }}
 
+<p>
+	<input id="invoker" type="button" value=" more... " onclick="reload_page()">
+</p>
+
       </section>
+
+<script type="text/javascript">
+
+var further_pages = [
+	"https://raw.githubusercontent.com/mentalmove/SudokuGenerator/Step1-CreateAndShow/README.md",
+	"https://raw.githubusercontent.com/mentalmove/SudokuGenerator/Step2-GetSections/README.md",
+	"https://raw.githubusercontent.com/mentalmove/SudokuGenerator/Step3-WhichSection/README.md",
+	"https://raw.githubusercontent.com/mentalmove/SudokuGenerator/Step4-SolvedSudoku/README.md",
+	"https://raw.githubusercontent.com/mentalmove/SudokuGenerator/Step5-IntroducingIndices/README.md",
+	"https://raw.githubusercontent.com/mentalmove/SudokuGenerator/Step6-UnsolvedSudoku/README.md",
+	"https://raw.githubusercontent.com/mentalmove/SudokuGenerator/Step7-DifferentIndices/README.md",
+	"https://raw.githubusercontent.com/mentalmove/SudokuGenerator/Step8-SquareRules/README.md"
+];
+
+function content_loaded (receiveReq, element) {
+        if ( receiveReq.readyState == 4 && (receiveReq.response || receiveReq.responseText) ) {
+            var response = receiveReq.response || receiveReq.responseText;
+            if ( receiveReq.status && receiveReq.status >= 400 ) {
+                reload_page();
+                return;
+            }
+
+			var interesting = response.replace(/(####)(.*)/g, "<br><br><h4>$2</h4>");
+			interesting = interesting.replace(/(###)(.*)/g, "<br><br><h3>$2</h3>");
+			interesting = interesting.replace(/(##)(.*)/g, "<br><br><h1>$2</h1>");
+			interesting = interesting.replace(/(\`\`\`c?)([^\`]+)\`\`\`/g, "<pre>$2</pre>");
+			interesting = interesting.replace(/(\`)([^\`]+)\`/g, "<code>$2</code> ");
+			interesting = interesting.replace(/(> )(.*)/g, "<b>$2</b>");
+			interesting = interesting.replace(/---\n\n/g, "<hr>\n");
+
+            element.innerHTML = interesting;
+            setTimeout(reload_page, 333);
+        }
+    }
+    function load_content (url, element) {
+        var receiveReq = new XMLHttpRequest();
+        if ( receiveReq.readyState == 4 || receiveReq.readyState == 0 ) {
+            receiveReq.open("GET", url, true);
+            receiveReq.onreadystatechange = function () {
+                content_loaded(receiveReq, element);
+            };
+            receiveReq.send(null);
+        }
+    }
+
+	function reload_page () {
+
+		if ( !further_pages.length )
+			return;
+		var invoker = document.getElementById("invoker");
+		if ( invoker )
+			invoker.parentNode.removeChild(invoker);
+
+		var section = document.getElementsByTagName("section")[0];
+		var new_zone = document.createElement("span");
+		new_zone.style.whiteSpace = "pre-wrap";
+		section.appendChild(new_zone);
+
+		var page = further_pages.shift();
+		
+		load_content(page, new_zone);
+	}
+</script>
+
       <footer>
         {% if site.github.is_project_page %}
         <p>This project is maintained by <a href="{{ site.github.owner_url }}?tab=repositories">{{ site.github.owner_name }}</a></p>
