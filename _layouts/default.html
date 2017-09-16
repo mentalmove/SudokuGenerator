@@ -69,13 +69,26 @@ var further_pages = [
 	"https://raw.githubusercontent.com/mentalmove/SudokuGenerator/Step8-SquareRules/README.md"
 ];
 
-function content_loaded (receiveReq, element) {
+function content_loaded (receiveReq, element, url) {
         if ( receiveReq.readyState == 4 && (receiveReq.response || receiveReq.responseText) ) {
             var response = receiveReq.response || receiveReq.responseText;
             if ( receiveReq.status && receiveReq.status >= 400 ) {
                 reload_page();
                 return;
             }
+
+			var title_array = url.match(/Step\d-.*/);
+			if ( title_array && title_array.length ) {
+				var base_url = "https://github.com/mentalmove/SudokuGenerator/tree/";
+				var individual_url = url.match(/Step\d-.*/)[0].replace(/\/README\.md/, "");
+				var title_link = document.createElement("header");
+				var a = document.createElement("a");
+				a.innerHTML = "<br><br>View Branch on GitHub";
+				a.href = base_url + individual_url;
+				title_link.appendChild(a);
+				title_link.style.marginTop = "5px";
+				element.appendChild(title_link);
+			}
 
 			var interesting = response.replace(/(####)(.*)/g, "<br><br><h4>$2</h4>");
 			interesting = interesting.replace(/(###)(.*)/g, "<br><br><h3>$2</h3>");
@@ -88,7 +101,7 @@ function content_loaded (receiveReq, element) {
 			interesting = interesting.replace(/(\*\*)([\w\s_]+)(\*\*)/g, "<b>$2</b>");
 			interesting = interesting.replace(/---\n\n/g, "<hr>\n");
 
-            element.innerHTML = interesting;
+            element.innerHTML += interesting;
             setTimeout(reload_page, 333);
         }
     }
@@ -97,7 +110,7 @@ function content_loaded (receiveReq, element) {
         if ( receiveReq.readyState == 4 || receiveReq.readyState == 0 ) {
             receiveReq.open("GET", url, true);
             receiveReq.onreadystatechange = function () {
-                content_loaded(receiveReq, element);
+                content_loaded(receiveReq, element, url);
             };
             receiveReq.send(null);
         }
