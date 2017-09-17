@@ -90,7 +90,7 @@ is the same as with complete randomisation.
 
 ---
 
-**Branch _master_** will contain only two small variations:  
+_Branch **master**_ will contain only two small variations:  
 Firstly, as a further performance improvement,
 small squares shall be handled in an order
 such that every following small square
