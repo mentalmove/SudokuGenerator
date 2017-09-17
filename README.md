@@ -1,5 +1,8 @@
 ## Step VIII - Square Rules
 
+Diagonal indices were a good idea, but lack in flexibility.
+Instead, 
+
 ```C
 void shuffle_indices (uint* indices) {
 	unsigned int meta_indices[TOTAL];
