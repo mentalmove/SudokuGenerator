@@ -100,7 +100,7 @@ In human standards, the function never terminates what easily can be checked by 
 
 ### Explanation
 
-Understanding why the second example needs many steps is easier as understanding why the first example is frugal.
+Understanding why the second example needs many steps is easier than understanding why the first example is frugal.
 
 &nbsp;
 
