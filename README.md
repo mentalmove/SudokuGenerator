@@ -1,10 +1,30 @@
 ## Step VIII - Square Rules
 
 Diagonal indices were a good idea, but lack in flexibility.
-Instead, 
+Instead, the first `LINE` indices of the first small square shall be filled,
+then the second `LINE` indices of the second small square etc.
+Used function is
+```c
+void fill_small_squares(unsigned int*);
+```
+which looks a bit more frightening than its namesake of step 1
+due to the fact that this time the numbers obviously must not be repeated.
+In this basic appearance, it takes 3195 tries to generate a solved 9x9 sudoku
+(what is worse than 405 tries the diagonal method needed
+but still more than acceptable).  
+The reason why it works well stays the same:
+_Dead ends are detected very soon_.
 
+&nbsp;
+
+Randomisation is done only inside small squares;
+to avoid further arithmetics, this time the
+already generated indices are copied
+and used for indexing.
+Inside a block of `LINE` elements, every element
+swaps its place with a higher one chosen by random.
 ```C
-void shuffle_indices (uint* indices) {
+void shuffle_indices (unsigned int* indices) {
 	unsigned int meta_indices[TOTAL];
 	unsigned int i, j, random, tmp;
 	for ( i = 0; i < TOTAL; i++ )
@@ -19,7 +39,9 @@ void shuffle_indices (uint* indices) {
 	}
 }
 ```
+&nbsp;
 
+Original indices on the left, possible randomised version on the right:
 ```
  -------------------                                     -------------------
 |  0 :  1 |  4 :  5 |                                   |  0 :  2 |  7 :  5 |
@@ -55,3 +77,24 @@ void shuffle_indices (uint* indices) {
 | 60 : 61 : 62 | 69 : 70 : 71 | 78 : 79 : 80 |          | 55 : 60 : 58 | 64 : 67 : 66 | 77 : 79 : 74 |
  --------------------------------------------            --------------------------------------------
 ```
+
+---
+
+The suitability of this procedure can easily be checked
+by executing the application
+but as well be understood theoretically:
+- Indices are still more or less adjacent even after randomisation - failures will be detected early.
+- Since small squares contain `LINE` numbers in any case,
+the probability for every number to appear on a distinct place
+is the same as with complete randomisation.
+
+---
+
+**Branch _master_** will contain only two small variations:  
+Firstly, as a further performance improvement,
+small squares shall be handled in an order
+such that every following small square
+shall be neighboured to its predecessor.  
+Secondly, since the previously described method
+allows different variations, one of these will be chosen by random
+to provide more (optical) variety to the user.
