@@ -8,9 +8,9 @@ explained in step 5.
 
 Without improvements, this suggestion lacks in practical relevance.  
 A suitable collection of indices should have at least three properties:
-- It should offer variety, i.e. be strongly randomised
-- It should enable building a sudoku in reasonable time
-- It should lead to an interesting sudoku, i.e. one with few remaining numbers
+- It should offer variety, i.e. be strongly randomised.
+- It should enable building a sudoku in reasonable time.
+- It should lead to an interesting sudoku, i.e. one with few remaining numbers.
 
 Fortunately, the two last points are correlated:
 Creating a solved sudoku and transforming it to an unsolved sudoku
